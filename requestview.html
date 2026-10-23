@@ -1,3 +1,13 @@
+<!-- Here’s a template following your spec. I don’t know your model’s exact fields, so r.requester, r.description, r.amount, and r.created_at are placeholders; swap in whatever your model actually uses.-->
+<!-- A few notes:
+
+One form per button. Approve and Deny are separate forms since each posts to a different URL and has no other fields. Add a small CSS rule like td form { display: inline; } if you want them side by side.
+Block name. I used {% block content %}; change it to match whatever block your base.html defines.
+No flash messages. Since base.html renders them, nothing on this page touches the messages framework.
+Status display. get_status_display only exists if status is a field with choices. The |default:r.status falls back to the raw value otherwise.
+Buttons are only a convenience. Because the backend enforces permissions anyway, you don’t need to hide buttons by user role here. The status checks just keep the UI clean.
+CSRF errors. If you ever see “403 Forbidden: CSRF verification failed,” check that the form has {% csrf_token %} inside it. -->
+
 {% extends "base.html" %}
 
 {% block content %}
