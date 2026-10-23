@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Spending Requests</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Requested by</th>
+      <th>Description</th>
+      <th>Amount</th>
+      <th>Submitted</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in spending_reqs %}
+    <tr>
+      <td>{{ r.requester }}</td>
+      <td>{{ r.description }}</td>
+      <td>${{ r.amount|floatformat:2 }}</td>
+      <td>{{ r.created_at|date:"M j, Y" }}</td>
+      <td>{{ r.get_status_display|default:r.status }}</td>
+      <td>
+        {% if r.status == "PENDING" %}
+          <form method="post" action="{% url 'request-approve' organization_slug=current_org.slug request_id=r.id %}">
+            {% csrf_token %}
+            <button type="submit">Approve</button>
+          </form>
+          <form method="post" action="{% url 'request-deny' organization_slug=current_org.slug request_id=r.id %}">
+            {% csrf_token %}
+            <button type="submit">Deny</button>
+          </form>
+        {% elif r.status == "SUBMITTED" %}
+          <form method="post" action="{% url 'request-complete' organization_slug=current_org.slug request_id=r.id %}">
+            {% csrf_token %}
+            <button type="submit">Complete</button>
+          </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="6">No requests yet.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
