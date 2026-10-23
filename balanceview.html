@@ -1,0 +1,26 @@
+<section>
+  <div class="card">
+    <h2>True bank balance</h2>
+    <p class="amt">${{ true_balance|floatformat:2 }}</p>
+  </div>
+  <div class="card committed">
+    <h2>Committed funds</h2>
+    <p class="amt">${{ committed_funds|floatformat:2 }}</p>
+  </div>
+  <div class="card working">
+    <h2>Working budget</h2>
+    <p class="amt">${{ working_budget|floatformat:2 }}</p>
+  </div>
+</section>
+
+<dialog id="rec">
+  <form method="post" action="{% url 'balance-reconcile' organization_slug=current_org.slug %}">
+    {% csrf_token %}
+    <label for="rb">Bank balance ($)</label>
+    <input id="rb" name="balance" type="number" step="0.01" required>
+    <label for="rn">Note (optional)</label>
+    <textarea id="rn" name="note" rows="2"></textarea>
+    <button type="button" onclick="this.closest('dialog').close()">Cancel</button>
+    <button type="submit">Save balance</button>
+  </form>
+</dialog>
